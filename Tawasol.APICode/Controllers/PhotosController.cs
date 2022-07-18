@@ -245,6 +245,35 @@ namespace Tawasol.APICode.Controllers
             });
         }
 
+        [HttpPut("CoverViewEdit")]
+        public async Task<IActionResult> CoverViewEdit(PhotoForReturnDto dto)
+        {
+            if (User.FindFirst(ClaimTypes.NameIdentifier).Value != dto.UserId)
+            {
+                return Unauthorized();
+            }
+            var cover = mapper.Map<CoverPhoto>(dto);
+            var result = unitOfWork.CoverPhotos.Update(cover);
+            if (result != null)
+            {
+                await unitOfWork.CompleteAsync();
+                return Ok(new ApiResponse<PhotoForReturnDto>
+                {
+                    Code = 200,
+                    Status = "ok",
+                    Message = "success",
+                    Data = dto
+                });
+            }
+            return Ok(new ApiResponse<PhotoForReturnDto>
+            {
+                Code = 404,
+                Status = "not found",
+                Message = "error",
+                Data = dto
+            });
+        }
+
         #region Clodinary method
         private async Task<ApiResponse<string>> UploadPhoto(IFormFile file, int W, int H, string G, string C)
         {
