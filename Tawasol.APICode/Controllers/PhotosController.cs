@@ -139,6 +139,38 @@ namespace Tawasol.APICode.Controllers
         }
 
 
+        [HttpPost("SetMain/{type}")]
+        public async Task<IActionResult> SetMainProfile(string type, PhotoForReturnDto[] dtos)
+        {
+            if (type == "profile")
+            {
+                var photos = mapper.Map<IEnumerable<ProfilePhoto>>(dtos);
+                unitOfWork.ProfilePhotos.UpdateRange(photos);
+            }
+            else
+            {
+                var photos = mapper.Map<IEnumerable<CoverPhoto>>(dtos);
+                unitOfWork.CoverPhotos.UpdateRange(photos);
+            }
+            var status = await unitOfWork.CompleteAsync();
+            if (status > 0)
+            {
+                return Ok(new ApiResponse<IEnumerable<PhotoForReturnDto>>
+                {
+                    Code = 200,
+                    Status = "ok",
+                    Message = "success",
+                    Data = dtos
+                });
+            }
+            return Ok(new ApiResponse<string>
+            {
+                Code = 404,
+                Status = "not found",
+                Message = "error",
+            });
+        }
+
 
 
         #region Clodinary method
