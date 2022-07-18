@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tawasol.DAL.Entity;
 using Tawasol.DAL.Extend;
 
 namespace Tawasol.DAL.Database
@@ -24,11 +25,20 @@ namespace Tawasol.DAL.Database
                 .HasDefaultValueSql("GETDATE()");
             });
 
-            
+            builder.Entity<ProfilePhoto>()
+                .Property(p => p.DateAdded)
+                .HasDefaultValueSql("GETDATE()");
+
+            builder.Entity<CoverPhoto>()
+                .Property(p => p.DateAdded)
+                .HasDefaultValueSql("GETDATE()");
 
             base.OnModelCreating(builder);
         }
 
+
+        public DbSet<ProfilePhoto> ProfilePhotos { get; set; }
+        public DbSet<CoverPhoto> CoverPhotos { get; set; }
 
     }
 }

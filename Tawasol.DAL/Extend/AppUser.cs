@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tawasol.DAL.Entity;
 
 namespace Tawasol.DAL.Extend
 {
@@ -18,6 +19,8 @@ namespace Tawasol.DAL.Extend
 
         public DateTime CreatedAt { get; set; }
 
+        public ICollection<ProfilePhoto> ProfilePhotos { get; set; }
+        public ICollection<CoverPhoto> CoverPhotos { get; set; }
 
     }
 }
