@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Tawasol.BL.DTOs;
 using Tawasol.BL.Helper;
 using Tawasol.BL.Interface;
@@ -46,6 +47,45 @@ namespace Tawasol.APICode.Controllers
                 Status = "ok",
                 Message = "success",
                 Data = returnUser
+            });
+        }
+
+        
+        [HttpPut("EditUser")]
+        public async Task<IActionResult> EditUser(EditUserDetailsDto dto)
+        {
+            if (User.FindFirst(ClaimTypes.NameIdentifier).Value != dto.Id)
+            {
+                return Unauthorized();
+            }
+            var user = await unitOfWork.Users.FindAsync(u => u.Id == dto.Id);
+            user.FirstName = dto.firstName;
+            user.LastName = dto.lastName;
+            user.Gender = dto.Gender;
+            user.City = dto.City;
+            user.Country = dto.Country;
+            user.Instagram = dto.Instagram;
+            user.SocialSituationnstagram = dto.SocialSituationnstagram;
+            user.PhoneNumber = dto.WhatsApp;
+            var result = unitOfWork.Users.Update(user);
+            if (result == null)
+            {
+                return Ok(new ApiResponse<EditUserDetailsDto>
+                {
+                    Code = 404,
+                    Status = "not found",
+                    Message = "error",
+                    Data = dto
+                });
+            }
+            await unitOfWork.CompleteAsync();
+            var userForReturn = mapper.Map<UserForReturnDto>(user);
+            return Ok(new ApiResponse<UserForReturnDto>
+            {
+                Code = 200,
+                Status = "ok",
+                Message = "success",
+                Data = userForReturn
             });
         }
         #endregion

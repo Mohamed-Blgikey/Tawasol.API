@@ -15,6 +15,7 @@ namespace Tawasol.BL.Helper
         public DomainProfile()
         {
             CreateMap<AppUser, UserForReturnDto>()
+              .ForMember(dest => dest.WhatsApp, opt => { opt.MapFrom(u=>u.PhoneNumber); })
               .ForMember(dest => dest.PhotoUrl, opt => { opt.MapFrom(p => p.ProfilePhotos.FirstOrDefault(a => a.IsMain).Url); })
               .ForMember(dest => dest.CoverUrl, opt => { opt.MapFrom(p => p.CoverPhotos.FirstOrDefault(a => a.IsMain).Url); });
 

@@ -139,7 +139,7 @@ namespace Tawasol.APICode.Controllers
         }
 
 
-        [HttpPost("SetMain/{type}")]
+        [HttpPut("SetMain/{type}")]
         public async Task<IActionResult> SetMainProfile(string type, PhotoForReturnDto[] dtos)
         {
             if (type == "profile")

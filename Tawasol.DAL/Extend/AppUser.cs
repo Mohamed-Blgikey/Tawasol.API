@@ -18,6 +18,13 @@ namespace Tawasol.DAL.Extend
         public bool Gender { get; set; }
 
         public DateTime CreatedAt { get; set; }
+        public string? City { get; set; }
+        public string? Country { get; set; }
+        public string? Instagram { get; set; }
+        public string? SocialSituationnstagram { get; set; }
+
+        public string? Work { get; set; }
+        public string? Graduated { get; set; }
 
         public ICollection<ProfilePhoto> ProfilePhotos { get; set; }
         public ICollection<CoverPhoto> CoverPhotos { get; set; }
