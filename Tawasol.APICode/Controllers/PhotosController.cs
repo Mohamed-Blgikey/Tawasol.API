@@ -172,6 +172,78 @@ namespace Tawasol.APICode.Controllers
         }
 
 
+        [HttpPost("DeleteImage/{type}")]
+        public async Task<IActionResult> DeleteProfileImage(string type, PhotoForReturnDto dto)
+        {
+
+            if (type == "profile")
+            {
+                var photo = mapper.Map<ProfilePhoto>(dto);
+                var result = unitOfWork.ProfilePhotos.Delete(photo);
+                if (result == null)
+                {
+                    return Ok(new ApiResponse<string>
+                    {
+                        Code = 404,
+                        Status = "not found",
+                        Message = "error",
+                    });
+                }
+                var status = await unitOfWork.CompleteAsync();
+                if (status > 0)
+                {
+                    await DeletePhoto(result.PublicId);
+                    return Ok(new ApiResponse<PhotoForReturnDto>
+                    {
+                        Code = 200,
+                        Status = "ok",
+                        Message = "success",
+                        Data = dto
+                    });
+
+                }
+            }
+            else if (type == "cover")
+            {
+                var photo = mapper.Map<CoverPhoto>(dto);
+                var result = unitOfWork.CoverPhotos.Delete(photo);
+                if (result == null)
+                {
+                    return Ok(new ApiResponse<string>
+                    {
+                        Code = 404,
+                        Status = "not found",
+                        Message = "error",
+                    });
+                }
+                var status = await unitOfWork.CompleteAsync();
+                if (status > 0)
+                {
+                    await DeletePhoto(result.PublicId);
+                    return Ok(new ApiResponse<PhotoForReturnDto>
+                    {
+                        Code = 200,
+                        Status = "ok",
+                        Message = "success",
+                        Data = dto
+                    });
+
+                }
+            }
+            //for posts
+            else
+            {
+
+            }
+
+
+            return Ok(new ApiResponse<string>
+            {
+                Code = 404,
+                Status = "not found",
+                Message = "error",
+            });
+        }
 
         #region Clodinary method
         private async Task<ApiResponse<string>> UploadPhoto(IFormFile file, int W, int H, string G, string C)
