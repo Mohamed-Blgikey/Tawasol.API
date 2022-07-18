@@ -38,7 +38,6 @@ namespace Tawasol.DAL.Database
 
 
         public DbSet<ProfilePhoto> ProfilePhotos { get; set; }
-        public DbSet<CoverPhoto> CoverPhotos { get; set; }
 
     }
 }
