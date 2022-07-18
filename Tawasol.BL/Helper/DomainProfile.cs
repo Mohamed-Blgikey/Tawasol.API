@@ -18,8 +18,8 @@ namespace Tawasol.BL.Helper
               .ForMember(dest => dest.PhotoUrl, opt => { opt.MapFrom(p => p.ProfilePhotos.FirstOrDefault(a => a.IsMain).Url); })
               .ForMember(dest => dest.CoverUrl, opt => { opt.MapFrom(p => p.CoverPhotos.FirstOrDefault(a => a.IsMain).Url); });
 
-            //CreateMap<CreatePhotoDto, ProfilePhoto>();
-            //CreateMap<CreatePhotoDto, CoverPhoto>();
+            CreateMap<CreatePhotoDto, ProfilePhoto>();
+            CreateMap<CreatePhotoDto, CoverPhoto>();
 
             CreateMap<PhotoForReturnDto, ProfilePhoto>();
             CreateMap<PhotoForReturnDto, CoverPhoto>();

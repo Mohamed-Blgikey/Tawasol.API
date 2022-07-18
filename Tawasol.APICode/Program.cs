@@ -70,7 +70,7 @@ builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailS
 builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
 
 //Cloudinar configration
-//builder.Services.Configure<ClodinarySettings>(builder.Configuration.GetSection("ClodinarySettings"));
+builder.Services.Configure<ClodinarySettings>(builder.Configuration.GetSection("ClodinarySettings"));
 
 builder.Services.AddAuthentication(opt =>
 {
