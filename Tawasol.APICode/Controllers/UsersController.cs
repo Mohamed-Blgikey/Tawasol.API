@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
 using Tawasol.BL.DTOs;
 using Tawasol.BL.Helper;
@@ -16,15 +17,17 @@ namespace Tawasol.APICode.Controllers
     {
         #region fields
         private readonly IMapper mapper;
+        private readonly IHubContext<UsersHub> usersHub;
         private readonly IUnitOfWork unitOfWork;
 
         #endregion
 
         #region Ctor
-        public UsersController(IUnitOfWork unitOfWork, IMapper mapper)
+        public UsersController(IUnitOfWork unitOfWork, IMapper mapper,IHubContext<UsersHub> usersHub)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
+            this.usersHub = usersHub;
         }
         #endregion
 
@@ -80,6 +83,7 @@ namespace Tawasol.APICode.Controllers
             }
             await unitOfWork.CompleteAsync();
             var userForReturn = mapper.Map<UserForReturnDto>(user);
+            await usersHub.Clients.All.SendAsync("EditDetails", userForReturn);
             return Ok(new ApiResponse<UserForReturnDto>
             {
                 Code = 200,

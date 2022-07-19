@@ -106,6 +106,9 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 //add Auto Mapper
 builder.Services.AddAutoMapper(opt => opt.AddProfile(new DomainProfile()));
 
+//Add SignalR
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -117,6 +120,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+
+app.MapHub<UsersHub>("/UsersActions");
 //addCores
 app.UseCors(o => o.WithOrigins("*", "http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials());
 
