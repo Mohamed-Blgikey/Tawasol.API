@@ -76,14 +76,14 @@ namespace Tawasol.APICode.Controllers
                     if (createResult != null)
                     {
                         await unitOfWork.CompleteAsync();
-                        var PhotoForReturn = mapper.Map<PhotoForReturnDto>(createResult);
-                        await usersHub.Clients.All.SendAsync("EditImageProfile", PhotoForReturn);
-                        return Ok(new ApiResponse<PhotoForReturnDto>
+                        var PhotosForReturn = mapper.Map<IEnumerable<PhotoForReturnDto>>(user.ProfilePhotos);
+                        await usersHub.Clients.All.SendAsync("EditImageProfile", PhotosForReturn);
+                        return Ok(new ApiResponse<IEnumerable<PhotoForReturnDto>>
                         {
                             Code = 200,
                             Status = "ok",
                             Message = "success",
-                            Data = PhotoForReturn,
+                            Data = PhotosForReturn,
                         });
                     }
                 }
@@ -161,6 +161,14 @@ namespace Tawasol.APICode.Controllers
             var status = await unitOfWork.CompleteAsync();
             if (status > 0)
             {
+                if (type == "profile")
+                {
+                    await usersHub.Clients.All.SendAsync("MainProfile", dtos);
+                }
+                else
+                {
+                    await usersHub.Clients.All.SendAsync("MainCover", dtos);
+                }
                 return Ok(new ApiResponse<IEnumerable<PhotoForReturnDto>>
                 {
                     Code = 200,
@@ -198,6 +206,7 @@ namespace Tawasol.APICode.Controllers
                 var status = await unitOfWork.CompleteAsync();
                 if (status > 0)
                 {
+                    await usersHub.Clients.All.SendAsync("DeleteProfile", dto);
                     await DeletePhoto(result.PublicId);
                     return Ok(new ApiResponse<PhotoForReturnDto>
                     {

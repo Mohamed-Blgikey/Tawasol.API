@@ -18,6 +18,9 @@ namespace Tawasol.BL.DTOs
         public string? Instagram { get; set; }
         public string? WhatsApp { get; set; }
         public string? SocialSituationnstagram { get; set; }
+        public string? Work { get; set; }
+        public string? Graduated { get; set; }
+
 
     }
 }

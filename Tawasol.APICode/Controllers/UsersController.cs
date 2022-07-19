@@ -70,6 +70,9 @@ namespace Tawasol.APICode.Controllers
             user.Instagram = dto.Instagram;
             user.SocialSituationnstagram = dto.SocialSituationnstagram;
             user.PhoneNumber = dto.WhatsApp;
+            user.Work = dto.Work;
+            user.Graduated = dto.Graduated;
+
             var result = unitOfWork.Users.Update(user);
             if (result == null)
             {
