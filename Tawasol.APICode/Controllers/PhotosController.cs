@@ -112,15 +112,15 @@ namespace Tawasol.APICode.Controllers
                     if (createResult != null)
                     {
                         await unitOfWork.CompleteAsync();
-                        var CoverForReturn = mapper.Map<PhotoForReturnDto>(createResult);
-                        await usersHub.Clients.All.SendAsync("EditCover", CoverForReturn);
+                        var CoversForReturn = mapper.Map<IEnumerable<PhotoForReturnDto>>(user.CoverPhotos);
+                        await usersHub.Clients.All.SendAsync("EditCover", CoversForReturn);
 
-                        return Ok(new ApiResponse<PhotoForReturnDto>
+                        return Ok(new ApiResponse<IEnumerable<PhotoForReturnDto>>
                         {
                             Code = 200,
                             Status = "ok",
                             Message = "success",
-                            Data = CoverForReturn,
+                            Data = CoversForReturn,
                         });
                     }
                 }
@@ -152,23 +152,17 @@ namespace Tawasol.APICode.Controllers
             {
                 var photos = mapper.Map<IEnumerable<ProfilePhoto>>(dtos);
                 unitOfWork.ProfilePhotos.UpdateRange(photos);
+                await usersHub.Clients.All.SendAsync("MainProfile", dtos);
             }
             else
             {
                 var photos = mapper.Map<IEnumerable<CoverPhoto>>(dtos);
                 unitOfWork.CoverPhotos.UpdateRange(photos);
+                await usersHub.Clients.All.SendAsync("MainCover", dtos);
             }
             var status = await unitOfWork.CompleteAsync();
             if (status > 0)
             {
-                if (type == "profile")
-                {
-                    await usersHub.Clients.All.SendAsync("MainProfile", dtos);
-                }
-                else
-                {
-                    await usersHub.Clients.All.SendAsync("MainCover", dtos);
-                }
                 return Ok(new ApiResponse<IEnumerable<PhotoForReturnDto>>
                 {
                     Code = 200,
@@ -234,6 +228,7 @@ namespace Tawasol.APICode.Controllers
                 var status = await unitOfWork.CompleteAsync();
                 if (status > 0)
                 {
+                    await usersHub.Clients.All.SendAsync("DeleteCover", dto);
                     await DeletePhoto(result.PublicId);
                     return Ok(new ApiResponse<PhotoForReturnDto>
                     {
@@ -272,6 +267,7 @@ namespace Tawasol.APICode.Controllers
             if (result != null)
             {
                 await unitOfWork.CompleteAsync();
+                await usersHub.Clients.All.SendAsync("CoverViewEdit",result);
                 return Ok(new ApiResponse<PhotoForReturnDto>
                 {
                     Code = 200,
